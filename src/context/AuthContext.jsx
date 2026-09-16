@@ -1,51 +1,39 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
-// 1. Create the Context
 const AuthContext = createContext(null);
+const TOKEN_KEY = "nexora_token";
+const USER_KEY = "nexora_user";
 
-// 2. Create the Provider Component
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
+  const [user, setUser] = useState(() => {
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  });
 
-  // Check if a user session already exists when the app loads
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
-  }, []);
+  function signIn(nextToken, nextUser) {
+    localStorage.setItem(TOKEN_KEY, nextToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+    setToken(nextToken);
+    setUser(nextUser);
+  }
 
-  // Login handler
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
-
-  // Logout handler
-  const logout = () => {
+  function signOut() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setToken(null);
     setUser(null);
-    localStorage.removeItem("user");
-  };
-
-  // Prevent app rendering until we check localStorage
-  if (loading) {
-    return <div>Loading...</div>; // Replace with a spinner or null if preferred
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// 3. Custom Hook for easy consumption
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
