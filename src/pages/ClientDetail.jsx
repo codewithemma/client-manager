@@ -27,7 +27,7 @@ export default function ClientDetail() {
       setForm(data);
       try {
         const n = await notesApi.list(id);
-        setNoteList(Array.isArray(n) ? n : n?.notes ?? []);
+        setNoteList(Array.isArray(n) ? n : (n?.notes ?? []));
       } catch {
         setNoteList([]);
       }
@@ -101,7 +101,10 @@ export default function ClientDetail() {
   return (
     <div className="min-h-screen bg-[#0B0E14]">
       <header className="border-b border-[#232A38] px-6 py-4 flex items-center justify-between">
-        <Link to="/dashboard" className="text-sm text-[#8B94A5] hover:text-[#E7EAF0]">
+        <Link
+          to="/dashboard"
+          className="text-sm text-[#8B94A5] hover:text-[#E7EAF0]"
+        >
           ← Back
         </Link>
         <Logo size={22} />
@@ -115,7 +118,9 @@ export default function ClientDetail() {
             <>
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-lg font-semibold text-[#E7EAF0]">{client.name}</h1>
+                  <h1 className="text-lg font-semibold text-[#E7EAF0]">
+                    {client.name}
+                  </h1>
                   <p className="text-sm text-[#8B94A5]">{client.company}</p>
                 </div>
                 <span
@@ -231,7 +236,9 @@ export default function ClientDetail() {
                   key={n.id ?? n._id ?? i}
                   className="bg-[#12161F] border border-[#232A38] rounded-lg px-4 py-3"
                 >
-                  <p className="text-sm text-[#E7EAF0]">{n.content ?? n.text}</p>
+                  <p className="text-sm text-[#E7EAF0]">
+                    {n.content ?? n.text}
+                  </p>
                   {n.createdAt && (
                     <p className="text-xs text-[#5B6473] mt-1">
                       {new Date(n.createdAt).toLocaleDateString()}

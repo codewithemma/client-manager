@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../api";
-import { useAuth } from "../App";
+
 import Logo from "../components/Logo";
+import { useAuth } from "../context/AuthContext";
 
 const inputClass =
   "w-full rounded-lg bg-[#0B0E14] border border-[#232A38] px-3 py-2 text-sm text-[#E7EAF0] placeholder:text-[#5B6473] focus:outline-none focus:ring-2 focus:ring-[#7DD3FC]";
@@ -55,7 +56,9 @@ export default function Login() {
 
         <div className="bg-[#12161F] border border-[#232A38] rounded-xl p-6">
           <h1 className="text-lg font-semibold text-[#E7EAF0] mb-5">
-            {mode === "signin" ? "Sign in to your clients" : "Create your account"}
+            {mode === "signin"
+              ? "Sign in to your clients"
+              : "Create your account"}
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -101,7 +104,11 @@ export default function Login() {
               disabled={loading}
               className="w-full rounded-lg bg-[#7DD3FC] text-[#0B0E14] font-medium py-2 text-sm hover:bg-[#38BDF8] transition-colors disabled:opacity-60"
             >
-              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              {loading
+                ? "Please wait…"
+                : mode === "signin"
+                  ? "Sign in"
+                  : "Create account"}
             </button>
           </form>
 

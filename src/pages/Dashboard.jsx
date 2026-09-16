@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clients as clientsApi, auth } from "../api";
-import { useAuth } from "../App";
+import { useAuth } from "../context/AuthContext";
+
 import Logo from "../components/Logo";
 
 const STATUSES = ["All", "Prospect", "Active"];
@@ -31,7 +32,7 @@ export default function Dashboard() {
     setError("");
     try {
       const data = await clientsApi.list();
-      setList(Array.isArray(data) ? data : data?.clients ?? []);
+      setList(Array.isArray(data) ? data : (data?.clients ?? []));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -59,7 +60,13 @@ export default function Dashboard() {
     setError("");
     try {
       await clientsApi.create(form);
-      setForm({ name: "", company: "", email: "", phone: "", status: "Prospect" });
+      setForm({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        status: "Prospect",
+      });
       setShowForm(false);
       load();
     } catch (err) {
@@ -195,7 +202,9 @@ export default function Dashboard() {
         {loading ? (
           <p className="text-sm text-[#8B94A5]">Loading clients…</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[#8B94A5]">No clients yet. Add your first one above.</p>
+          <p className="text-sm text-[#8B94A5]">
+            No clients yet. Add your first one above.
+          </p>
         ) : (
           <ul className="divide-y divide-[#232A38] border border-[#232A38] rounded-xl overflow-hidden">
             {filtered.map((c) => {
@@ -207,7 +216,9 @@ export default function Dashboard() {
                   className="flex items-center justify-between px-4 py-3 bg-[#12161F] hover:bg-[#171D28] cursor-pointer transition-colors"
                 >
                   <div>
-                    <p className="text-sm font-medium text-[#E7EAF0]">{c.name}</p>
+                    <p className="text-sm font-medium text-[#E7EAF0]">
+                      {c.name}
+                    </p>
                     <p className="text-xs text-[#8B94A5]">{c.company}</p>
                   </div>
                   <div className="flex items-center gap-3">

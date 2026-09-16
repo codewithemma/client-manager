@@ -1,6 +1,6 @@
 // Central place for every backend call. If your API base URL changes,
 // update it here only.
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://client-manager-api.vercel.app/api";
 const TOKEN_KEY = "nexora_token";
 
 function getToken() {
