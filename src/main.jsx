@@ -1,33 +1,43 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
 import "./index.css";
-import ClientDetail from "./pages/ClientDetail.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import ClientDetail from "./pages/ClientDetail.jsx";
 
-// 1. Define your routes in an array
 const router = createBrowserRouter([
+  { path: "/", element: <Login /> },
   {
-    path: "/login",
-    element: <Login />, // Acts as the layout wrapper
-    children: [
-      {
-        index: true, // Default page for path "/"
-        element: <Dashboard />,
-      },
-      {
-        path: "ClientDetail", // Matches "/about"
-        element: <ClientDetail />,
-      },
-    ],
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
   },
+  {
+    path: "/clients/:id",
+    element: (
+      <ProtectedRoute>
+        <ClientDetail />
+      </ProtectedRoute>
+    ),
+  },
+  { path: "*", element: <Navigate to="/" replace /> },
 ]);
 
-// 2. Render using RouterProvider
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 );
