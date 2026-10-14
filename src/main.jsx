@@ -12,6 +12,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ClientDetail from "./pages/ClientDetail.jsx";
+import DummyDashboard from "./pages/DummyDashboard.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -31,8 +32,13 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+    path: "/dummy/dashboard",
+    element: <DummyDashboard />,
+  },
   { path: "*", element: <Navigate to="/" replace /> },
 ]);
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
